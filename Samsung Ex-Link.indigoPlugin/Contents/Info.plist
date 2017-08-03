@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PluginVersion</key>
+    <string>0.1</string>
+    <key>ServerApiVersion</key>
+    <string>2.0</string>
+    <key>CFBundleDisplayName</key>
+    <string>Samsung Ex-Link</string>
+    <key>CFBundleName</key>
+    <string>ExLink</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.oldefortran.indigo.exlink</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>https://www.google.com/#q=samsung+ex-link</string>
+        </dict>
+    </array>
+</dict>
+</plist>
