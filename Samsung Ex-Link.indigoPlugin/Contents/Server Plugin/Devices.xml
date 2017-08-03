@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<Devices>
+	<Device type="relay" id="ExLink">
+		<Name>Samsung Ex-Link</Name>
+		<ConfigUI>
+            <Field type="serialport" id="devicePortFieldId" />
+            <!-- debug flag? -->
+		</ConfigUI>
+		<States>
+			<State id="input">
+				<ValueType>
+					<List>
+						<Option value="TV">TV</Option>
+						<Option value="AV1">Composite A/V 1</Option>
+						<Option value="AV2">Composite A/V 2</Option>
+						<Option value="AV3">Composite A/V 3</Option>
+						<Option value="SVID1">S-Video 1</Option>
+						<Option value="SVID2">S-Video 2</Option>
+						<Option value="SVID3">S-Video 3</Option>
+						<Option value="COMP1">Component 1</Option>
+						<Option value="COMP2">Component 2</Option>
+						<Option value="COMP3">Component 3</Option>
+						<Option value="PC1">PC 1</Option>
+						<Option value="PC2">PC 2</Option>
+						<Option value="PC3">PC 3</Option>
+						<Option value="HDMI1">HDMI 1</Option>
+						<Option value="HDMI2">HDMI 2</Option>
+						<Option value="HDMI3">HDMI 3</Option>
+						<Option value="HDMI4">HDMI 4</Option>
+						<Option value="HDMI5">HDMI 5</Option>
+						<Option value="HDMI6">HDMI 6</Option>
+						<Option value="DVI1">DVI 1</Option>
+						<Option value="DVI2">DVI 2</Option>
+						<Option value="DVI3">DVI 3</Option>
+						<Option value="SMARTHUB">Smart Hub</Option>
+						<Option value="NETFLIX">Netflix</Option>
+						<Option value="AMAZON">Amazon</Option>
+						<Option value="UNKNOWN">Unknown Input</Option>
+					</List>
+				</ValueType>
+				<TriggerLabel>Active Input Changed</TriggerLabel>
+				<TriggerLabelPrefix>Input Changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Active Input</ControlPageLabel>
+			</State>
+			<State id="volume">
+				<ValueType>Integer</ValueType>
+				<TriggerLabel>Current Volume</TriggerLabel>
+				<TriggerLabelPrefix>Volume Changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Current Volume</ControlPageLabel>
+			</State>
+			<State id="channel">
+				<ValueType>Integer</ValueType>
+				<TriggerLabel>Current Channel</TriggerLabel>
+				<TriggerLabelPrefix>Channel Changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Current Channel</ControlPageLabel>
+			</State>
+			<State id="mute">
+				<ValueType boolType="YesNo">Boolean</ValueType>
+				<TriggerLabel>Mute</TriggerLabel>
+				<ControlPageLabel>Mute</ControlPageLabel>
+			</State>
+			<State id="pictureMode">
+				<ValueType>
+					<List>
+						<Option value="DYNAMIC">Dynamic</Option>
+						<Option value="STANDARD">Standard</Option>
+						<Option value="MOVIE">Movie</Option>
+						<Option value="NATURAL">Natural</Option>
+						<Option value="CAL_NIGHT">Calibrated (Night)</Option>
+						<Option value="CAL_DAY">Calibrated (Day)</Option>
+						<Option value="BD_WISE">BD Wise</Option>
+						<Option value="MODE7">Mode 7</Option>
+						<Option value="MODE8">Mode 8</Option>
+						<Option value="MODE9">Mode 9</Option>
+						<Option value="RELAX">Relax</Option>
+						<Option value="MODE10">Mode 10</Option>
+						<Option value="MODE11">Mode 11</Option>
+						<Option value="UNKNOWN">Unknown Mode</Option>
+					</List>
+				</ValueType>
+				<TriggerLabel>Picture Mode</TriggerLabel>
+				<TriggerLabelPrefix>Picture Mode Changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Picture Mode</ControlPageLabel>
+			</State>
+			<State id="soundMode">
+				<ValueType>
+					<List>
+						<Option value="STANDARD">Standard</Option>
+						<Option value="MUSIC">Music</Option>
+						<Option value="MOVIE">Movie</Option>
+						<Option value="CLEARVOICE">Clear Voice</Option>
+						<Option value="AMPLIFY">Amplify</Option>
+						<Option value="MODE5">Mode 5</Option>
+						<Option value="MODE6">Mode 6</Option>
+						<Option value="MODE7">Mode 7</Option>
+						<Option value="MODE8">Mode 8</Option>
+						<Option value="UNKNOWN">Unknown Mode</Option>
+					</List>
+				</ValueType>
+				<TriggerLabel>Sound Mode</TriggerLabel>
+				<TriggerLabelPrefix>Sound Mode changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Sound Mode</ControlPageLabel>
+			</State>
+			<State id="pictureSize">
+				<ValueType>
+					<List>
+						<Option value="SIXTEEN_NINE">16:9</Option>
+						<Option value="ZOOM1">Zoom 1</Option>
+						<Option value="ZOOM2">Zoom 2</Option>
+						<Option value="WIDE_FIT">Wide Fit</Option>
+						<Option value="FOUR_THREE">4:3</Option>
+						<Option value="SCREEN_FIT">Screen Fit</Option>
+						<Option value="SMART_VIEW1">SmartView 1</Option>
+						<Option value="SMART_VIEW2">SmartView 2</Option>
+						<Option value="UNKNOWN">Unknown Size</Option>
+					</List>
+				</ValueType>
+				<TriggerLabel>Picture Size</TriggerLabel>
+				<TriggerLabelPrefix>Picture Size changed to</TriggerLabelPrefix>
+				<ControlPageLabel>Picture Size</ControlPageLabel>
+			</State>
+		</States>
+	</Device>
+</Devices>

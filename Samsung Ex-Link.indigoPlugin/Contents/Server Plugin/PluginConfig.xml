@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<PluginConfig>
+	<Field id="DebugLabel" type="label" fontSize="small">
+		<Label>In the event of difficulties, it may be helpful to enable extra debug logging.</Label>
+	</Field>
+	<Field id="DebugFlag" type="checkbox">
+		<Label>Enable debug logging:</Label>
+	</Field>
+</PluginConfig>
