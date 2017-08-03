@@ -800,7 +800,7 @@ class Plugin(indigo.PluginBase):
 			self.logger.warn(u"Input query returned unrecognized response "+binascii.hexlify(bytearray(reply)))
 			self.logger.warn(u"Please let the author know which input this is!")
 		else:
-			self.logger.error(u"Input query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Input query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 			dev.updateStateOnServer("input", "UNKNOWN")		
 
@@ -819,7 +819,7 @@ class Plugin(indigo.PluginBase):
 			#unknown mode
 			self.logger.warn(u"Picture Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Picture Mode query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Picture Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("pictureMode", "UNKNOWN")
 
@@ -838,7 +838,7 @@ class Plugin(indigo.PluginBase):
 			#unknown mode
 			self.logger.warn(u"Sound Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Sound Mode query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Sound Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("soundMode", "UNKNOWN")
 
@@ -856,7 +856,7 @@ class Plugin(indigo.PluginBase):
 			#unknown mode
 			self.logger.warn(u"Picture Size returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Picture Size query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Picture Size query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("pictureSize", "UNKNOWN")
 
@@ -865,8 +865,8 @@ class Plugin(indigo.PluginBase):
 		reply = self.sendQuery(dev, "3D_STATE")
 		if self.validateChecksum(reply):
 			#TODO figure out messaging.  Not sure what exactly "3d state" means in this context
-			self.logger.debug(u"Received valid 3D state response "++binascii.hexlify(bytearray(reply))+
-				".  Someday we'll know what it means.")
+			self.logger.debug(u"Received valid 3D state response "+binascii.hexlify(bytearray(reply))+
+					".  Someday we'll know what it means.")
 		else:
 			self.logger.error(u"3D State query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
@@ -880,7 +880,7 @@ class Plugin(indigo.PluginBase):
 			#value is an integer state
 			dev.updateStateOnServer("channel", val)
 		else:
-			self.logger.error(u"Channel query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Channel query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateVolume(self, dev):
@@ -892,7 +892,7 @@ class Plugin(indigo.PluginBase):
 			#value is an integer state
 			dev.updateStateOnServer("volume", val)
 		else:
-			self.logger.error(u"Volume query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Volume query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateMute(self, dev):
@@ -904,7 +904,7 @@ class Plugin(indigo.PluginBase):
 			#mute is a boolean state
 			dev.updateStateOnServer("mute", val)
 		else:
-			self.logger.error(u"Mute query response bad CRC: "++binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"Mute query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	# Device commands : two-way synchronized
@@ -913,7 +913,7 @@ class Plugin(indigo.PluginBase):
 	def powerOff(self, dev):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
-			if self.sendEnumCommand("PowerOff"):
+			if self.sendEnumCommand(dev, "PowerOff"):
 				dev.updateStateOnServer("onOffState", False)
 		self.serialLocks[dev.id].release()
 			
@@ -921,7 +921,7 @@ class Plugin(indigo.PluginBase):
 	def powerOn(self, dev):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
-			if self.sendEnumCommand("PowerOn"):
+			if self.sendEnumCommand(dev, "PowerOn"):
 				dev.updateStateOnServer("onOffState", True)
 		self.serialLocks[dev.id].release()
 	
@@ -1022,7 +1022,7 @@ class Plugin(indigo.PluginBase):
 		if self.checkSerial(dev):
 			try:
 				self.sendIntegerCommand(dev, "Channel", channel)
-				updateChannel(dev)
+				self.updateChannel(dev)
 			except:
 				self.logger.error("Internal error changing channel")
 				pass				
@@ -1042,7 +1042,7 @@ class Plugin(indigo.PluginBase):
 		if self.checkSerial(dev):
 			try:
 				self.sendIntegerCommand(dev, "Volume", volume)
-				updateVolume(dev)
+				self.updateVolume(dev)
 			except:
 				self.logger.error("Internal error changing volume")
 				pass				
@@ -1168,7 +1168,7 @@ class Plugin(indigo.PluginBase):
 		dev = indigo.devices[action.deviceId]
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
-			self.sendEnumCommand(str(action.pluginTypeId))
+			self.sendEnumCommand(dev, str(action.pluginTypeId))
 		self.serialLocks[dev.id].release()
 		
 	########################################
