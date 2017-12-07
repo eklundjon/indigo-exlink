@@ -914,8 +914,12 @@ class Plugin(indigo.PluginBase):
 	def powerOff(self, dev):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
-			if self.sendEnumCommand(dev, "PowerOff"):
-				dev.updateStateOnServer("onOffState", False)
+			#reduce serial read timeout because if the TV is already off it won't
+			#  ack the command and we don't want to hang the server
+			self.serialConns[dev.id].timeout = self.powerSerialTimeout
+			self.sendEnumCommand(dev, "PowerOff")
+			dev.updateStateOnServer("onOffState", False)
+			self.serialConns[dev.id].timeout = self.defaultSerialTimeout
 		self.serialLocks[dev.id].release()
 			
 	########################################
