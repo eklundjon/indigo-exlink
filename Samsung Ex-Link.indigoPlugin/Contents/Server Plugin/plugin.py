@@ -18,7 +18,6 @@ class Plugin(indigo.PluginBase):
 
 		for dev in indigo.devices.iter("self"):
 			self.serialLocks[dev.id] = threading.Lock()
-			self.serialConns[dev.id] = None
 
 
 	def __del__(self):
@@ -34,6 +33,7 @@ class Plugin(indigo.PluginBase):
 		
 	########################################
 	def deviceStartComm(self, dev, blockIfBusy=True):
+		#indigo.debugger()
 		if self.serialLocks[dev.id].acquire(blockIfBusy):
 			self.checkSerial(dev)
 			self.serialLocks[dev.id].release()
@@ -43,7 +43,7 @@ class Plugin(indigo.PluginBase):
 	########################################
 	def deviceStopComm(self, dev, blockIfBusy=True):
 		if self.serialLocks[dev.id].acquire(blockIfBusy):
-			if self.serialConns[dev.id] is not None:
+			if self.serialConns.get(dev.id) is not None:
 				self.serialConns[dev.id].close()
 				self.serialConns[dev.id] = None
 			self.serialLocks[dev.id].release()
@@ -64,8 +64,8 @@ class Plugin(indigo.PluginBase):
 
 		# This doesn't feel like the right place to initialize member variables
 		# for new devices, but I don't see any obvious alternative
-		self.serialLocks[devId] = threading.Lock()
-		self.serialConns[devId] = None
+		if self.serialLocks.get(devId) is None:
+			self.serialLocks[devId] = threading.Lock()
 
 		# User choices look good, so return True (client will then close the dialog window).
 		return (True, valuesDict)
@@ -654,7 +654,7 @@ class Plugin(indigo.PluginBase):
 
 	######################
 	def checkSerial(self, dev):
-		if self.serialConns[dev.id] is not None:
+		if self.serialConns.get(dev.id) is not None:
 			junk = []
 			while self.serialConns[dev.id].in_waiting:
 				junk += self.serialConns[dev.id].read(1)
@@ -684,7 +684,7 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	def waitForAck(self, dev):
-		if self.serialConns[dev.id] is not None:
+		if self.serialConns.get(dev.id) is not None:
 			reply = []
 			reply += self.serialConns[dev.id].read(3)
 			if bytearray(reply) == bytearray(self.responses["ACK"]):
@@ -699,7 +699,7 @@ class Plugin(indigo.PluginBase):
 			self.logger.error("Invalid query "+query)
 			return
 			
-		if self.serialConns[dev.id] is not None:
+		if self.serialConns.get(dev.id) is not None:
 			self.serialConns[dev.id].write(bytearray(self.queries[query]))
 			if self.waitForAck(dev):
 				reply = []
