@@ -204,27 +204,27 @@
 				<Label>White Balance values center on 25</Label>
 			</Field>
 			<Field id="WhiteBalanceROffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Red Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceRGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Red Gain (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceGOffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Green Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceGGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Green Gain (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceBOffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Blue Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceBGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
-					visibleBindingValue="WhiteBalance">
+					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
 					<Label>White Balance Blue Gain (0-50):</Label>
 			</Field>
 		</ConfigUI>
@@ -266,23 +266,23 @@
 				<Label>EQ scale centers on 10: 0=min, 10=0, 20=max</Label>
 			</Field>
 				<Field id="SoundEQ100Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
-					visibleBindingValue="SoundEQ">
+					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
 						<Label>100Hz EQ (0-20):</Label>
 				</Field>
 				<Field id="SoundEQ300Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
-					visibleBindingValue="SoundEQ">
+					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
 						<Label>300Hz EQ (0-20):</Label>
 				</Field>
 				<Field id="SoundEQ1kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
-					visibleBindingValue="SoundEQ">
+					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
 						<Label>1kHz EQ (0-20):</Label>
 				</Field>
 				<Field id="SoundEQ3kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
-					visibleBindingValue="SoundEQ">
+					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
 						<Label>3kHz EQ (0-20):</Label>
 				</Field>
 				<Field id="SoundEQ10kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
-					visibleBindingValue="SoundEQ">
+					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
 						<Label>10kHz EQ (0-20):</Label>
 				</Field>
 			</ConfigUI>
