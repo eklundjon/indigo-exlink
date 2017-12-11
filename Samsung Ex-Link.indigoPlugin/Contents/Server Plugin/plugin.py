@@ -51,6 +51,19 @@ class Plugin(indigo.PluginBase):
 			self.logger.debug(u"<<-- skipped deviceStopComm (startStop locked) -->>")
 
 	########################################
+	def closedPrefsConfigUi(self, valuesDict, userCancelled):
+		self.logger.debug(u"closedPrefsConfigUi enter")
+		if userCancelled:
+			return
+
+		self.debug = valuesDict.get("DebugFlag", False)
+		if self.debug:
+			indigo.server.log("Debug logging enabled")
+		else:
+			indigo.server.log("Debug logging disabled")
+
+
+	########################################
 	def validateDeviceConfigUi(self, valuesDict, typeId, devId):
 		self.logger.debug(u"validateDeviceConfigUi enter")
 
