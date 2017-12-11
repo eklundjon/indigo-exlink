@@ -62,13 +62,20 @@ class Plugin(indigo.PluginBase):
 			# will not let the dialog window close).
 			return (False, valuesDict, errorsDict)
 
-		# This doesn't feel like the right place to initialize member variables
-		# for new devices, but I don't see any obvious alternative
-		if self.serialLocks.get(devId) is None:
-			self.serialLocks[devId] = threading.Lock()
-
 		# User choices look good, so return True (client will then close the dialog window).
 		return (True, valuesDict)
+
+
+	########################################
+	def closedDeviceConfigUi(self, valuesDict, userCancelled, typeId, devId):
+		self.logger.debug(u"closedDeviceConfigUi enter")
+		if userCancelled:
+			return
+
+		#now that we're sure the device is actually being created,
+		#we can finish variable initialization
+		if self.serialLocks.get(devId) is None:
+			self.serialLocks[devId] = threading.Lock()
 
 	########################################
 	def validateActionConfigUi(self, valuesDict, typeId, devId):
