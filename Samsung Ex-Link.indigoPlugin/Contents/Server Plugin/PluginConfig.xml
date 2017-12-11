@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <PluginConfig>
+	<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Plugin-Configuration</SupportURL>
 	<Field id="DebugLabel" type="label" fontSize="small">
 		<Label>In the event of difficulties, it may be helpful to enable extra debug logging.</Label>
 	</Field>

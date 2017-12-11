@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <Actions>
+	<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Actions</SupportURL>
 	<Action id="selectInput" deviceFilter="self">
 		<Name>Select Input</Name>
 		<CallbackMethod>selectInput</CallbackMethod>

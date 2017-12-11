@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <Devices>
+	<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Devices</SupportURL>
 	<Device type="relay" id="ExLink">
 		<Name>Samsung Ex-Link</Name>
 		<ConfigUI>
