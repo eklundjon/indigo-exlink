@@ -124,8 +124,8 @@ class Plugin(indigo.PluginBase):
 		return (False, valuesDict, errorsDict)
 
 	########################################
-	def actionControlDimmerRelay(self, action, dev):	
-		self.logger.debug(u"actionControlDimmerRelay enter")	
+	def actionControlDevice(self, action, dev):
+		self.logger.debug(u"actionControlDevice enter")
 		
 		if action.deviceAction == indigo.kDeviceAction.TurnOn: 
 			self.powerOn(dev)			 
@@ -143,10 +143,10 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	#General Action callback
-	def actionControlGeneral(self, action, dev):
-		self.logger.debug(u"actionControlGeneral enter")	
+	def actionControlUniversal(self, action, dev):
+		self.logger.debug(u"actionControlUniversal enter")
 		###### STATUS REQUEST ######
-		if action.deviceAction == indigo.kDeviceGeneralAction.RequestStatus:
+		if action.deviceAction == indigo.kUniversalAction.RequestStatus:
 			indigo.server.log(u"sent \"%s\" %s" % (dev.name, "status request"))
 			self.serialLocks[dev.id].acquire()
 			if self.checkSerial(dev) and self.isPowerOn(dev):
