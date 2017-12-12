@@ -287,33 +287,33 @@
 				</Field>
 			</ConfigUI>
 	</Action>	
-	
+
 	<Action id="send3DCommand" deviceFilter="self">
 		<Name>Send 3D Command</Name>
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
-			<Field id="CommandGroup" type="menu" defaultValue="Brightness">
+			<Field id="CommandGroup" type="menu" defaultValue="3DPictureCorrection">
 				<Label>3D Command:</Label>
 				<List>
-					<Option value="3DMode">Set Mode</Option>
+					<Option value="3DMode">Set 3D Mode</Option>
 					<Option value="3D2D">Set 3D -> 2D</Option>
 					<Option value="3DAutoView">Set Auto-View</Option>
-					<Option value="3DViewPoint">Set View Point</Option>
+					<Option value="3DViewPoint">Set Viewpoint</Option>
 					<Option value="3DDepth">Set Depth</Option>
 					<Option value="3DPictureCorrection">3D Picture Correction</Option>
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
 			<Field id="Command" type="menu" defaultValue="" visibleBindingId="CommandGroup"
-					visibleBindingValue="SRSTruSurround, SRSTruDialog, MTS, AutoVolume, SpeakerSelect">
+					visibleBindingValue="3DMode, 3D2D, 3DAutoView">
 				<Label>Option Value:</Label>
 				<List class="self" filter="test" method="commandGenerator" dynamicReload="true"/>
 			</Field>
-			<Field id="3dViewPoint" type="textfield" defaultValue="0" visibleBindingId="CommandGroup"
+			<Field id="ViewPoint" type="textfield" defaultValue="0" visibleBindingId="CommandGroup"
 					visibleBindingValue="3DViewPoint">
 				<Label>View Point (-5 to 5):</Label>
 			</Field>
-			<Field id="3dDepth" type="textfield" defaultValue="" visibleBindingId="CommandGroup"
+			<Field id="Depth" type="textfield" defaultValue="" visibleBindingId="CommandGroup"
 					visibleBindingValue="3DDepth">
 				<Label>Depth (1-10):</Label>
 			</Field>
