@@ -109,15 +109,18 @@ class Plugin(indigo.PluginBase):
 				
 		if ("CommandGroup" in valuesDict):
 			commandGroup = valuesDict.get("CommandGroup", "")
-			command = valuesDict.get("Command", "")
-			for cmd in self.enumCommands:
-				#hate to hard-code magic commands, but the only one-shots are the resets
-				if (cmd.startswith(commandGroup) and not self.enumCommands[cmd].get("OneShot", False)):
-					if command == "":
-						self.logger.error("Group "+commandGroup+" needs a value")
-						errorsDict["Command"] = "Please choose a value"
-					else:
-						self.logger.debug("Group "+commandGroup+" command "+command)
+			if commandGroup == "NULL":
+				self.logger.error("Please choose a command")
+				errorsDict["CommandGroup"] = "Please choose a command"
+			else:
+				command = valuesDict.get("Command", "")
+				for cmd in self.enumCommands:
+					if (cmd.startswith(commandGroup) and not self.enumCommands[cmd].get("OneShot", False)):
+						if command == "":
+							self.logger.error("Group "+commandGroup+" needs a value")
+							errorsDict["Command"] = "Please choose a value"
+						else:
+							self.logger.debug("Group "+commandGroup+" command "+command)
 
 		if len(errorsDict) == 0:
 			return (True, valuesDict)

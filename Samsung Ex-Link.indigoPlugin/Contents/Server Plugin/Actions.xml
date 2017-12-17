@@ -5,36 +5,37 @@
 		<Name>Select Input</Name>
 		<CallbackMethod>selectInput</CallbackMethod>
 		<ConfigUI>
+			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Select-Input</SupportURL>
 			<Field id="Input" type="menu" defaultValue="TV">
 				<Label>Select an input:</Label>
 				<List>
 				<!-- TO-DO make this a dynamic menu based on device capabilites -->
-		            <Option value="TV">TV</Option>
-		            <Option value="AV1">Composite A/V 1</Option>
-		            <Option value="AV2">Composite A/V 2</Option>
-		            <Option value="AV3">Composite A/V 3</Option>
-		            <Option value="SVID1">S-Video 1</Option>
-		            <Option value="SVID2">S-Video 2</Option>
-		            <Option value="SVID3">S-Video 3</Option>
-		            <Option value="COMP1">Component 1</Option>
-		            <Option value="COMP2">Component 2</Option>
-		            <Option value="COMP3">Component 3</Option>
-		            <Option value="PC1">PC 1</Option>
-		            <Option value="PC2">PC 2</Option>
-		            <Option value="PC3">PC 3</Option>
-		            <Option value="HDMI1">HDMI 1</Option>
-		            <Option value="HDMI2">HDMI 2</Option>
-		            <Option value="HDMI3">HDMI 3</Option>
-		            <Option value="HDMI4">HDMI 4</Option>
-		            <Option value="HDMI5">HDMI 5</Option>
-		            <Option value="HDMI6">HDMI 6</Option>
-		            <Option value="DVI1">DVI 1</Option>
-		            <Option value="DVI2">DVI 2</Option>
-		            <Option value="DVI3">DVI 3</Option>
-		            <Option value="SMARTHUB">Smart Hub</Option>
-		            <Option value="NETFLIX">Netflix</Option>
-		            <Option value="AMAZON">Amazon</Option>
-	            </List>
+					<Option value="TV">TV</Option>
+					<Option value="AV1">Composite A/V 1</Option>
+					<Option value="AV2">Composite A/V 2</Option>
+					<Option value="AV3">Composite A/V 3</Option>
+					<Option value="SVID1">S-Video 1</Option>
+					<Option value="SVID2">S-Video 2</Option>
+					<Option value="SVID3">S-Video 3</Option>
+					<Option value="COMP1">Component 1</Option>
+					<Option value="COMP2">Component 2</Option>
+					<Option value="COMP3">Component 3</Option>
+					<Option value="PC1">PC 1</Option>
+					<Option value="PC2">PC 2</Option>
+					<Option value="PC3">PC 3</Option>
+					<Option value="HDMI1">HDMI 1</Option>
+					<Option value="HDMI2">HDMI 2</Option>
+					<Option value="HDMI3">HDMI 3</Option>
+					<Option value="HDMI4">HDMI 4</Option>
+					<Option value="HDMI5">HDMI 5</Option>
+					<Option value="HDMI6">HDMI 6</Option>
+					<Option value="DVI1">DVI 1</Option>
+					<Option value="DVI2">DVI 2</Option>
+					<Option value="DVI3">DVI 3</Option>
+					<Option value="SMARTHUB">Smart Hub</Option>
+					<Option value="NETFLIX">Netflix</Option>
+					<Option value="AMAZON">Amazon</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -42,18 +43,18 @@
 			<Name>Set Channel</Name>
 			<CallbackMethod>setChannel</CallbackMethod>
 			<ConfigUI>
-					<Field id="Channel" type="textfield" defaultValue="0">
-							<Label>Channel:</Label>
-					</Field>
+				<Field id="Channel" type="textfield" defaultValue="">
+					<Label>Channel:</Label>
+				</Field>
 			</ConfigUI>
 	</Action>
 	<Action id="setVolume" deviceFilter="self">
 			<Name>Set Volume</Name>
 			<CallbackMethod>setVolume</CallbackMethod>
 			<ConfigUI>
-					<Field id="Volume" type="textfield" defaultValue="0">
-							<Label>Volume (0-100)</Label>
-					</Field>
+				<Field id="Volume" type="textfield" defaultValue="">
+					<Label>Volume (0-100)</Label>
+				</Field>
 			</ConfigUI>
 	</Action>
 	<Action id="setPictureMode" deviceFilter="self">
@@ -64,20 +65,20 @@
 				<Label>Picture Mode:</Label>
 				<List>
 				<!-- TO-DO make this a dynamic menu based on device capabilites -->
-		            <Option value="DYNAMIC">Dynamic</Option>
-		            <Option value="STANDARD">Standard</Option>
-		            <Option value="MOVIE">Movie</Option>
-		            <Option value="NATURAL">Natural</Option>
-		            <Option value="CAL_NIGHT">Calibrated (Night)</Option>
-		            <Option value="CAL_DAY">Calibrated (Day)</Option>
-		            <Option value="BD_WISE">BD Wise</Option>
-		            <Option value="MODE7">Mode 7</Option>
-		            <Option value="MODE8">Mode 8</Option>
-		            <Option value="MODE9">Mode 9</Option>
-		            <Option value="RELAX">Relax</Option>
-		            <Option value="MODE11">Mode 11</Option>
-		            <Option value="MODE12">Mode 12</Option>
-	            </List>
+					<Option value="DYNAMIC">Dynamic</Option>
+					<Option value="STANDARD">Standard</Option>
+					<Option value="MOVIE">Movie</Option>
+					<Option value="NATURAL">Natural</Option>
+					<Option value="CAL_NIGHT">Calibrated (Night)</Option>
+					<Option value="CAL_DAY">Calibrated (Day)</Option>
+					<Option value="BD_WISE">BD Wise</Option>
+					<Option value="MODE7">Mode 7</Option>
+					<Option value="MODE8">Mode 8</Option>
+					<Option value="MODE9">Mode 9</Option>
+					<Option value="RELAX">Relax</Option>
+					<Option value="MODE11">Mode 11</Option>
+					<Option value="MODE12">Mode 12</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -89,15 +90,15 @@
 				<Label>Picture Size:</Label>
 				<List>
 				<!-- TO-DO make this a dynamic menu based on device capabilites -->
-		            <Option value="SIXTEEN_NINE">16:9</Option>
-		            <Option value="ZOOM1">Zoom 1</Option>
-		            <Option value="ZOOM2">Zoom 2</Option>
-		            <Option value="WIDE_FIT">Wide Fit</Option>
-		            <Option value="FOUR_THREE">4:3</Option>
-		            <Option value="SCREEN_FIT">Screen Fit</Option>
-		            <Option value="SMART_VIEW1">SmartView 1</Option>
-		            <Option value="SMART_VIEW2">SmartView 2</Option>
-	            </List>
+					<Option value="SIXTEEN_NINE">16:9</Option>
+					<Option value="ZOOM1">Zoom 1</Option>
+					<Option value="ZOOM2">Zoom 2</Option>
+					<Option value="WIDE_FIT">Wide Fit</Option>
+					<Option value="FOUR_THREE">4:3</Option>
+					<Option value="SCREEN_FIT">Screen Fit</Option>
+					<Option value="SMART_VIEW1">SmartView 1</Option>
+					<Option value="SMART_VIEW2">SmartView 2</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -109,15 +110,15 @@
 				<Label>Sound Mode:</Label>
 				<List>
 				<!-- TO-DO make this a dynamic menu based on device capabilites -->
-		            <Option value="STANDARD">Standard</Option>
-		            <Option value="MUSIC">Music</Option>
-		            <Option value="MOVIE">Movie</Option>
-		            <Option value="CLEAR_VOICE">Clear Voice</Option>
-		            <Option value="AMPLIFY">Amplify</Option>
-		            <Option value="MODE6">Mode 6</Option>
-		            <Option value="MODE7">Mode 7</Option>
-		            <Option value="MODE8">Mode 8</Option>
-	            </List>
+					<Option value="STANDARD">Standard</Option>
+					<Option value="MUSIC">Music</Option>
+					<Option value="MOVIE">Movie</Option>
+					<Option value="CLEAR_VOICE">Clear Voice</Option>
+					<Option value="AMPLIFY">Amplify</Option>
+					<Option value="MODE6">Mode 6</Option>
+					<Option value="MODE7">Mode 7</Option>
+					<Option value="MODE8">Mode 8</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -126,7 +127,8 @@
 		<Name>Send Picture Command</Name>
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
-			<Field id="CommandGroup" type="menu" defaultValue="Brightness">
+			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Picture-Command</SupportURL>
+			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>Picture Command:</Label>
 				<List>
 					<Option value="BlackTone">Set Black Tone</Option>
@@ -154,6 +156,7 @@
 					<Option value="WhiteBalance">Set White Balance</Option>
 					<Option value="ResetPicture">Reset Picture</Option>
 					<Option value="ResetWhiteBalance">Reset White Balance</Option>
+					<Option value="NULL"></Option>
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
@@ -187,7 +190,7 @@
 			<Field id="tintLabel" type="label" visibleBindingId="CommandGroup" visibleBindingValue="Tint">
 				<Label>Tint scale centers on 50: 0=G50; 50=0; 100=R50</Label>
 			</Field>
-			<Field id="Tint" type="textfield" defaultValue="0" visibleBindingId="CommandGroup"
+			<Field id="Tint" type="textfield" defaultValue="50" visibleBindingId="CommandGroup"
 					visibleBindingValue="Tint">
 				<!-- TODO support G50/R50 values -->
 				<Label>Tint (0-100):</Label>
@@ -205,27 +208,27 @@
 			</Field>
 			<Field id="WhiteBalanceROffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Red Offset (0-50):</Label>
+				<Label>White Balance Red Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceRGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Red Gain (0-50):</Label>
+				<Label>White Balance Red Gain (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceGOffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Green Offset (0-50):</Label>
+				<Label>White Balance Green Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceGGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Green Gain (0-50):</Label>
+				<Label>White Balance Green Gain (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceBOffset" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Blue Offset (0-50):</Label>
+				<Label>White Balance Blue Offset (0-50):</Label>
 			</Field>
 			<Field id="WhiteBalanceBGain" type="textfield" defaultValue="25" visibleBindingId="CommandGroup"
 					visibleBindingValue="WhiteBalance" alwaysUseInDialogHeightCalc="true">
-					<Label>White Balance Blue Gain (0-50):</Label>
+				<Label>White Balance Blue Gain (0-50):</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -234,7 +237,8 @@
 		<Name>Send Sound Command</Name>
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
-			<Field id="CommandGroup" type="menu" defaultValue="SoundBalance">
+			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Sound-Command</SupportURL>
+			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>Sound Command:</Label>
 				<List>
 					<Option value="SRSTruSurround">Set SRSTruSurround</Option>
@@ -246,6 +250,7 @@
 					<Option value="SoundEQ">Set Graphic Equalizer</Option>
 					<Option value="ResetEqualizer">Reset/Clear Graphic Equalizer </Option>
 					<Option value="ResetSound">Reset Sound </Option>
+					<Option value="NULL"></Option>
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
@@ -259,40 +264,41 @@
 			</Field>
 			<Field id="SoundBalance" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundBalance">
-					<!-- TODO support L10-0-R10 values -->
-					<Label>Balance (0-20):</Label>
+				<!-- TODO support L10-0-R10 values -->
+				<Label>Balance (0-20):</Label>
 			</Field>
 			<Field id="EQLabel" type="label" visibleBindingId="CommandGroup" visibleBindingValue="SoundEQ">
 				<Label>EQ scale centers on 10: 0=min, 10=0, 20=max</Label>
 			</Field>
-				<Field id="SoundEQ100Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
+			<Field id="SoundEQ100Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
-						<Label>100Hz EQ (0-20):</Label>
-				</Field>
-				<Field id="SoundEQ300Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
+				<Label>100Hz EQ (0-20):</Label>
+			</Field>
+			<Field id="SoundEQ300Hz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
-						<Label>300Hz EQ (0-20):</Label>
-				</Field>
-				<Field id="SoundEQ1kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
+				<Label>300Hz EQ (0-20):</Label>
+			</Field>
+			<Field id="SoundEQ1kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
-						<Label>1kHz EQ (0-20):</Label>
-				</Field>
-				<Field id="SoundEQ3kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
+				<Label>1kHz EQ (0-20):</Label>
+			</Field>
+			<Field id="SoundEQ3kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
-						<Label>3kHz EQ (0-20):</Label>
-				</Field>
-				<Field id="SoundEQ10kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
+				<Label>3kHz EQ (0-20):</Label>
+			</Field>
+			<Field id="SoundEQ10kHz" type="textfield" defaultValue="10" visibleBindingId="CommandGroup"
 					visibleBindingValue="SoundEQ" alwaysUseInDialogHeightCalc="true">
-						<Label>10kHz EQ (0-20):</Label>
-				</Field>
-			</ConfigUI>
+				<Label>10kHz EQ (0-20):</Label>
+			</Field>
+		</ConfigUI>
 	</Action>	
 
 	<Action id="send3DCommand" deviceFilter="self">
 		<Name>Send 3D Command</Name>
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
-			<Field id="CommandGroup" type="menu" defaultValue="3DPictureCorrection">
+			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-3D-Command</SupportURL>
+			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>3D Command:</Label>
 				<List>
 					<Option value="3DMode">Set 3D Mode</Option>
@@ -301,6 +307,7 @@
 					<Option value="3DViewPoint">Set Viewpoint</Option>
 					<Option value="3DDepth">Set Depth</Option>
 					<Option value="3DPictureCorrection">3D Picture Correction</Option>
+					<Option value="NULL"></Option>
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
@@ -327,9 +334,9 @@
 			<Field id="Command" type="menu" defaultValue="TVModeCable">
 				<Label>Tuner Mode:</Label>
 				<List>
-		            <Option value="TVModeCable">Cable</Option>
-		            <Option value="TVModeAntenna">Antenna</Option>
-	            </List>
+					<Option value="TVModeCable">Cable</Option>
+					<Option value="TVModeAntenna">Antenna</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -341,12 +348,12 @@
 			<Field id="Command" type="menu" defaultValue="LanguageEnglish">
 				<Label>Language:</Label>
 				<List>
-		            <Option value="LanguageEnglish">English</Option>
-		            <Option value="LanguageSpanish">Spanish</Option>
-		            <Option value="LanguageFrench">French</Option>
-		            <Option value="LanguageKorean">Korean</Option>
-		            <Option value="LanguageJapanese">Japanese</Option>
-	            </List>
+					<Option value="LanguageEnglish">English</Option>
+					<Option value="LanguageSpanish">Spanish</Option>
+					<Option value="LanguageFrench">French</Option>
+					<Option value="LanguageKorean">Korean</Option>
+					<Option value="LanguageJapanese">Japanese</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -355,56 +362,57 @@
 		<Name>Send Button Press</Name>
 		<CallbackMethod>sendSingleButton</CallbackMethod>
 		<ConfigUI>
+			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Button-Press</SupportURL>
 			<Field id="Button" type="menu" defaultValue="MENU">
 				<Label>Select a button:</Label>
 				<List>
-		            <Option value="MENU">Menu</Option>
-		            <Option value="UP">Up</Option>
-		            <Option value="DOWN">Down</Option>
-		            <Option value="LEFT">Left</Option>
-		            <Option value="RIGHT">Right</Option>
+					<Option value="MENU">Menu</Option>
+					<Option value="UP">Up</Option>
+					<Option value="DOWN">Down</Option>
+					<Option value="LEFT">Left</Option>
+					<Option value="RIGHT">Right</Option>
 					<Option value="ENTER">Enter / OK</Option>
-		            <Option value="EXIT">Exit</Option>
-		            <Option value="MUTE">Mute</Option>
-		            <Option value="VOLUP">Volume Up</Option>
-		            <Option value="VOLDOWN">Volume Down</Option>
-		            <Option value="CHUP">Channel Up</Option>
-		            <Option value="CHDOWN">Channel Down</Option>
-		            <Option value="PRECH">Previous Channel</Option>
-		            <Option value="FAVCH">Favorite Channel</Option>
-		            <Option value="CHADD">Channel Add/Delete</Option>
-		            <Option value="CAPTION">Closed Caption</Option>
-		            <Option value="SLEEP">Sleep Mode</Option>
-		            <Option value="GUIDE">Guide</Option>
-		            <Option value="INFO">Info</Option>
-		            <Option value="RETURN">Return</Option>
-		            <Option value="TOOLS">Tools</Option>
-		            <Option value="RED">Red (A)</Option>
-		            <Option value="GREEN">Green (B)</Option>
-		            <Option value="YELLOW">Yellow (C)</Option>
-		            <Option value="BLUE">Blue (D)</Option>
-		            <Option value="PLAY">Play</Option>
-		            <Option value="PAUSE">Pause</Option>
-		            <Option value="STOP">Stop</Option>
-		            <Option value="REW">Rewind</Option>
-		            <Option value="FF">Fast forward</Option>
-		            <Option value="SKIPF">Skip Forward</Option>
-		            <Option value="SKIPB">Skip Back</Option>
-		            <Option value="SOURCE">Source</Option>
-		            <Option value="PICMODE">Picture Mode</Option>
-		            <Option value="SNDMODE">Sound Mode</Option>
-		            <Option value="CH_LIST">Channel List</Option>
-		            <Option value="KEY_0">#0</Option>
-		            <Option value="KEY_1">#1</Option>
-		            <Option value="KEY_2">#2</Option>
-		            <Option value="KEY_3">#3</Option>
-		            <Option value="KEY_4">#4</Option>
-		            <Option value="KEY_5">#5</Option>
-		            <Option value="KEY_6">#6</Option>
-		            <Option value="KEY_7">#7</Option>
-		            <Option value="KEY_8">#8</Option>
-		            <Option value="KEY_9">#9</Option>	            
-	            </List>
+					<Option value="EXIT">Exit</Option>
+					<Option value="MUTE">Mute</Option>
+					<Option value="VOLUP">Volume Up</Option>
+					<Option value="VOLDOWN">Volume Down</Option>
+					<Option value="CHUP">Channel Up</Option>
+					<Option value="CHDOWN">Channel Down</Option>
+					<Option value="PRECH">Previous Channel</Option>
+					<Option value="FAVCH">Favorite Channel</Option>
+					<Option value="CHADD">Channel Add/Delete</Option>
+					<Option value="CAPTION">Closed Caption</Option>
+					<Option value="SLEEP">Sleep Mode</Option>
+					<Option value="GUIDE">Guide</Option>
+					<Option value="INFO">Info</Option>
+					<Option value="RETURN">Return</Option>
+					<Option value="TOOLS">Tools</Option>
+					<Option value="RED">Red (A)</Option>
+					<Option value="GREEN">Green (B)</Option>
+					<Option value="YELLOW">Yellow (C)</Option>
+					<Option value="BLUE">Blue (D)</Option>
+					<Option value="PLAY">Play</Option>
+					<Option value="PAUSE">Pause</Option>
+					<Option value="STOP">Stop</Option>
+					<Option value="REW">Rewind</Option>
+					<Option value="FF">Fast forward</Option>
+					<Option value="SKIPF">Skip Forward</Option>
+					<Option value="SKIPB">Skip Back</Option>
+					<Option value="SOURCE">Source</Option>
+					<Option value="PICMODE">Picture Mode</Option>
+					<Option value="SNDMODE">Sound Mode</Option>
+					<Option value="CH_LIST">Channel List</Option>
+					<Option value="KEY_0">#0</Option>
+					<Option value="KEY_1">#1</Option>
+					<Option value="KEY_2">#2</Option>
+					<Option value="KEY_3">#3</Option>
+					<Option value="KEY_4">#4</Option>
+					<Option value="KEY_5">#5</Option>
+					<Option value="KEY_6">#6</Option>
+					<Option value="KEY_7">#7</Option>
+					<Option value="KEY_8">#8</Option>
+					<Option value="KEY_9">#9</Option>
+				</List>
 			</Field>
 		</ConfigUI>
 	</Action>
