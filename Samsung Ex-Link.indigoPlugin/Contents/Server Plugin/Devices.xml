@@ -120,6 +120,26 @@
 				<TriggerLabelPrefix>Picture Size changed to</TriggerLabelPrefix>
 				<ControlPageLabel>Picture Size</ControlPageLabel>
 			</State>
+			<State id="Mode3D">
+				<ValueType>
+					<List>
+						<Option value="OFF">Off</Option>
+						<Option value="ON">On</Option>
+						<Option value="TOP_BOTTOM">Top/Bottom</Option>
+						<Option value="SIDE_BY_SIDE">Side-by-Side</Option>
+						<Option value="MODE4">Mode 4</Option>
+						<Option value="MODE5">Mode 5</Option>
+						<Option value="MODE6">Mode 6</Option>
+						<Option value="MODE7">Mode 7</Option>
+						<Option value="MODE8">Mode 8</Option>
+						<Option value="TWO_TO_THREE">2D-to-3D</Option>
+						<Option value="UNKNOWN">Unknown Mode</Option>
+					</List>
+				</ValueType>
+				<TriggerLabel>3D Mode</TriggerLabel>
+				<TriggerLabelPrefix>3D Mode changed to</TriggerLabelPrefix>
+				<ControlPageLabel>3D Mode</ControlPageLabel>
+			</State>
 		</States>
 	</Device>
 </Devices>

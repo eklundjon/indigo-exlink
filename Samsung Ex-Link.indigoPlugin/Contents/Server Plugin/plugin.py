@@ -33,7 +33,11 @@ class Plugin(indigo.PluginBase):
 		
 	########################################
 	def deviceStartComm(self, dev, blockIfBusy=True):
-		#indigo.debugger()
+		#handle device upgrade from 1.0 to 1.1
+		if 'Mode3D' not in dev.states:
+			self.logger.info("Plugin Upgrade: Adding Mode3D state to Indigo Device")
+			dev.stateListOrDisplayStateIdChanged()
+
 		if self.serialLocks[dev.id].acquire(blockIfBusy):
 			self.checkSerial(dev)
 			self.serialLocks[dev.id].release()
@@ -162,7 +166,7 @@ class Plugin(indigo.PluginBase):
 				self.updateMute(dev)
 				self.updatePictureMode(dev)
 				self.updatePictureSize(dev)
-				self.update3dState(dev)
+				self.update3dMode(dev)
 				self.updateSoundMode(dev)
 			else:
 				dev.updateStateOnServer("onOffState", False)
@@ -185,15 +189,15 @@ class Plugin(indigo.PluginBase):
 	powerSerialTimeout = 0.5
 
 	queries = {
-		"POWER" : [0x08, 0x22, 0xF0, 0x00, 0x00, 0x00, 0xE6], #done
-		"VOLUME" : [0x08, 0x22, 0xF0, 0x01, 0x00, 0x00, 0xE5], #done
-		"MUTE" : [0x08, 0x22, 0xF0, 0x02, 0x00, 0x00, 0xE4], #done
-		"CHANNEL" : [0x08, 0x22, 0xF0, 0x03, 0x00, 0x00, 0xE3], #done
-		"INPUT" : [0x08, 0x22, 0xF0, 0x04, 0x00, 0x00, 0xE2], #done
-		"PICTURE_SIZE" : [0x08, 0x22, 0xF0, 0x05, 0x00, 0x00, 0xE1], #done
-		"3D_STATE" : [0x08, 0x22, 0xF0, 0x06, 0x00, 0x00, 0xE0], #need responses
-		"PICTURE_MODE" : [0x08, 0x22, 0xF0, 0x07, 0x00, 0x00, 0xDF], #done
-		"SOUND_MODE" : [0x08, 0x22, 0xF0, 0x08, 0x00, 0x00, 0xDE], #done
+		"POWER" : [0x08, 0x22, 0xF0, 0x00, 0x00, 0x00, 0xE6],
+		"VOLUME" : [0x08, 0x22, 0xF0, 0x01, 0x00, 0x00, 0xE5],
+		"MUTE" : [0x08, 0x22, 0xF0, 0x02, 0x00, 0x00, 0xE4],
+		"CHANNEL" : [0x08, 0x22, 0xF0, 0x03, 0x00, 0x00, 0xE3],
+		"INPUT" : [0x08, 0x22, 0xF0, 0x04, 0x00, 0x00, 0xE2],
+		"PICTURE_SIZE" : [0x08, 0x22, 0xF0, 0x05, 0x00, 0x00, 0xE1],
+		"3D_MODE" : [0x08, 0x22, 0xF0, 0x06, 0x00, 0x00, 0xE0],
+		"PICTURE_MODE" : [0x08, 0x22, 0xF0, 0x07, 0x00, 0x00, 0xDF],
+		"SOUND_MODE" : [0x08, 0x22, 0xF0, 0x08, 0x00, 0x00, 0xDE],
 		#one might expect that other settings could be queried via successive
 		#values of byte 4, but that doesn't seem to be the case on my TV
 	}
@@ -373,6 +377,35 @@ class Plugin(indigo.PluginBase):
 					"response" : [0x08, 0x00, 0x00, 0xF1, 0x07, 0x00, 0x00, 0x04] },
 		"MODE8" : { "command" : [0x08, 0x22, 0x0c, 0x00, 0x00, 0x08, 0xC2],
 					"response" : [0x08, 0x00, 0x00, 0xF1, 0x08, 0x00, 0x00, 0x03] },
+	}
+
+	ThreeDmodes = {
+		"OFF" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x0D] },
+		#My Plasma reports mode "ON" mode when playing 3D BD - might also be "FRAME_SEQUENCE"
+		"ON" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x01, 0x00, 0x00, 0x0C] },
+		"TOP_BOTTOM" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x02, 0x00, 0x00, 0x0B] },
+		#SIDE_BY_SIDE is Half SBS
+		"SIDE_BY_SIDE" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x03, 0x00, 0x02, 0x0A] },
+
+		#I have no reference for the display names of modes 4-7, though they must
+		#include checkerboard, line-by-line, and "vertical line" and maybe "frame sequence"
+		#If you discover any, please let me know
+		"MODE4" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x04, 0x00, 0x00, 0x09] },
+		"MODE5" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x05, 0x00, 0x00, 0x08] },
+		"MODE6" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x06, 0x00, 0x00, 0x07] },
+		"MODE7" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x07, 0x00, 0x00, 0x06] },
+
+		"TWO_TO_THREE" : { "command" : [], #command is defined in enumCommands
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x08, 0x00, 0x01, 0x05] },
+
 	}
 
 	#these commands are one-way only (can't read current setting from TV)
@@ -597,7 +630,7 @@ class Plugin(indigo.PluginBase):
 		"3DModeVerticalLine" : { "command" : [0x08, 0x22, 0x0b, 0x0c, 0x00, 0x05, 0xBA],
 						"name" : "Vertical Line"},
 		"3DModeCheckerBD" : { "command" : [0x08, 0x22, 0x0b, 0x0c, 0x00, 0x06, 0xB9],
-						"name" : "Checker BD"},
+						"name" : "Checkerboard"},
 		"3DModeFrameSequence" : { "command" : [0x08, 0x22, 0x0b, 0x0c, 0x00, 0x07, 0xB8],
 						"name" : "Frame Sequence"},
 
@@ -833,9 +866,12 @@ class Plugin(indigo.PluginBase):
 		reply = self.sendQuery(dev, "PICTURE_MODE")
 		for mode in self.pictureModes:
 			if bytearray(reply[-8:]) == bytearray(self.pictureModes[mode]["response"]):
-				self.logger.info(u"Current Picture Mode is "+mode)
 				if mode.startswith("MODE"):
+					self.logger.warn(u"Current Picture Mode is "+mode)
 					self.logger.warn(u"Please let the author know what your TV calls this mode!")
+					self.logger.warn(u"Send details to jon@oldefortran.com")
+				else:
+					self.logger.info(u"Current Picture Mode is "+mode)
 				dev.updateStateOnServer("pictureMode", mode)
 				return
 		
@@ -852,9 +888,12 @@ class Plugin(indigo.PluginBase):
 		reply = self.sendQuery(dev, "SOUND_MODE")
 		for mode in self.soundModes:
 			if bytearray(reply[-8:]) == bytearray(self.soundModes[mode]["response"]):
-				self.logger.info(u"Current Picture Mode is "+mode)
 				if mode.startswith("MODE"):
+					self.logger.warn(u"Current Sound Mode is "+mode)
 					self.logger.warn(u"Please let the author know what your TV calls this mode!")
+					self.logger.warn(u"Send details to jon@oldefortran.com")
+				else:
+					self.logger.info(u"Current Sound Mode is "+mode)
 				dev.updateStateOnServer("soundMode", mode)
 				return
 		
@@ -885,14 +924,24 @@ class Plugin(indigo.PluginBase):
 		dev.updateStateOnServer("pictureSize", "UNKNOWN")
 
 	########################################
-	def update3dState(self, dev):
-		reply = self.sendQuery(dev, "3D_STATE")
+	def update3dMode(self, dev):
+		reply = self.sendQuery(dev, "3D_MODE")
+		for mode in self.ThreeDmodes:
+			if bytearray(reply[-8:]) == bytearray(self.ThreeDmodes[mode]["response"]):
+				if mode.startswith("MODE"):
+					self.logger.warn(u"Current 3D Mode is "+mode)
+					self.logger.warn(u"Please let the author know what your TV calls this mode!")
+					self.logger.warn(u"Send details to jon@oldefortran.com")
+				else:
+					self.logger.info(u"Current 3D Mode is "+mode)
+				dev.updateStateOnServer("Mode3D", mode)
+				return
+
 		if self.validateChecksum(reply):
-			#TODO figure out messaging.  Not sure what exactly "3d state" means in this context
-			self.logger.debug(u"Received valid 3D state response "+binascii.hexlify(bytearray(reply))+
-					".  Someday we'll know what it means.")
+			#unknown mode
+			self.logger.warn(u"3D Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"3D State query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(u"3D Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateChannel(self, dev):
