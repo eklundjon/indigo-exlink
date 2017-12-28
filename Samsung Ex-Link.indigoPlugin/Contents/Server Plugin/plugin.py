@@ -389,7 +389,7 @@ class Plugin(indigo.PluginBase):
 					"response" : [0x06, 0x00, 0x00, 0xF1, 0x02, 0x00, 0x00, 0x0B] },
 		#SIDE_BY_SIDE is Half SBS
 		"SIDE_BY_SIDE" : { "command" : [], #command is defined in enumCommands
-					"response" : [0x06, 0x00, 0x00, 0xF1, 0x03, 0x00, 0x02, 0x0A] },
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x03, 0x00, 0x00, 0x0A] },
 
 		#I have no reference for the display names of modes 4-7, though they must
 		#include checkerboard, line-by-line, and "vertical line" and maybe "frame sequence"
@@ -404,7 +404,7 @@ class Plugin(indigo.PluginBase):
 					"response" : [0x06, 0x00, 0x00, 0xF1, 0x07, 0x00, 0x00, 0x06] },
 
 		"TWO_TO_THREE" : { "command" : [], #command is defined in enumCommands
-					"response" : [0x06, 0x00, 0x00, 0xF1, 0x08, 0x00, 0x01, 0x05] },
+					"response" : [0x06, 0x00, 0x00, 0xF1, 0x08, 0x00, 0x00, 0x05] },
 
 	}
 
@@ -817,6 +817,10 @@ class Plugin(indigo.PluginBase):
 			self.serialConns[dev.id].write(bytearray(self.enumCommands[command]["command"]))
 			if self.waitForAck(dev):
 				self.logger.info(u"Sent "+command)
+				#Do we need a delay here ?
+				if (command.startswith("3D")):
+					self.update3dMode(dev);
+
 				return True
 			else:
 				self.logger.error(u"Command "+command+" not acknowledged")
