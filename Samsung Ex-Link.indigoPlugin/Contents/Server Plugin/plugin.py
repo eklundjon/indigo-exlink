@@ -11,7 +11,7 @@ class Plugin(indigo.PluginBase):
 	# Begin Indigo plugin API functions #
 	#####################################
 	def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
-		super(Plugin, self).__init__(pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
+		indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 		self.debug = pluginPrefs.get("DebugFlag", False)
 		self.serialLocks = {}
 		self.serialConns = {}
@@ -25,17 +25,18 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	def startup(self):
-		self.logger.debug(u"startup called")
+		self.logger.debug(u"startup() enter")
 
 	########################################
 	def shutdown(self):
-		self.logger.debug(u"shutdown called")
+		self.logger.debug(u"shutdown() enter")
 		
 	########################################
 	def deviceStartComm(self, dev, blockIfBusy=True):
+		self.logger.debug(dev.name+": deviceStartComm() enter")
 		#handle device upgrade from 1.0 to 1.1
 		if 'Mode3D' not in dev.states:
-			self.logger.info("Plugin Upgrade: Adding Mode3D state to Indigo Device")
+			self.logger.info(u"Plugin Upgrade: Adding Mode3D state to Indigo Device \""+dev.name+"\"")
 			dev.stateListOrDisplayStateIdChanged()
 
 		if self.serialLocks[dev.id].acquire(blockIfBusy):
@@ -46,6 +47,7 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	def deviceStopComm(self, dev, blockIfBusy=True):
+		self.logger.debug(dev.name+": deviceStopComm() enter")
 		if self.serialLocks[dev.id].acquire(blockIfBusy):
 			if self.serialConns.get(dev.id) is not None:
 				self.serialConns[dev.id].close()
@@ -62,9 +64,9 @@ class Plugin(indigo.PluginBase):
 
 		self.debug = valuesDict.get("DebugFlag", False)
 		if self.debug:
-			indigo.server.log("Debug logging enabled")
+			self.logger.info("Debug logging enabled")
 		else:
-			indigo.server.log("Debug logging disabled")
+			self.logger.info("Debug logging disabled")
 
 
 	########################################
@@ -132,7 +134,7 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	def actionControlDevice(self, action, dev):
-		self.logger.debug(u"actionControlDevice enter")
+		self.logger.debug(dev.name+": actionControlDevice() enter")
 		
 		if action.deviceAction == indigo.kDeviceAction.TurnOn: 
 			self.powerOn(dev)			 
@@ -151,13 +153,13 @@ class Plugin(indigo.PluginBase):
 	########################################
 	#General Action callback
 	def actionControlUniversal(self, action, dev):
-		self.logger.debug(u"actionControlUniversal enter")
+		self.logger.debug(dev.name+": actionControlUniversal() enter")
 		###### STATUS REQUEST ######
 		if action.deviceAction == indigo.kUniversalAction.RequestStatus:
-			indigo.server.log(u"sent \"%s\" %s" % (dev.name, "status request"))
+			self.logger.info(dev.name+": Sending status request")
 			self.serialLocks[dev.id].acquire()
 			if self.checkSerial(dev) and self.isPowerOn(dev):
-				self.logger.debug(u"Serial is OK and device is ON: querying additional status info")
+				self.logger.debug(dev.name+": Serial is OK and device is ON: querying additional status info")
 				dev.updateStateOnServer("onOffState", True)
 				self.updateInput(dev)
 				if dev.states["input"] == "TV":
@@ -716,7 +718,7 @@ class Plugin(indigo.PluginBase):
 				junk += self.serialConns[dev.id].read(1)
 			if len(junk) > 0:
 				length = str(len(junk))
-				self.logger.warn(u"Received "+length+" unexpected bytes: "+binascii.hexlify(bytearray(junk)))
+				self.logger.warn(dev.name+": Received "+length+" unexpected bytes: "+binascii.hexlify(bytearray(junk)))
 			return True
 
 		#we need to figure out the serial type to find the port path
@@ -726,11 +728,11 @@ class Plugin(indigo.PluginBase):
 			portName = dev.pluginProps.get(u"devicePortFieldId_serialPortNetRfc2217", u"")
 		elif portType == "netSocket":
 			portName = dev.pluginProps.get(u"devicePortFieldId_serialPortNetSocket", u"")
-		self.logger.info(u"opening serial port "+portName)
+		self.logger.info(dev.name+": opening serial port "+portName)
 		self.serialConns[dev.id] = self.openSerial(dev.name, portName, 9600,
 			timeout=self.defaultSerialTimeout)
 		if self.serialConns[dev.id] is None:
-			self.logger.error(u"unable to open serial port")
+			self.logger.error(u"unable to open serial port for device \""+dev.name+"\"")
 			return False
 		else:
 			self.serialConns[dev.id].flushInput() # abundance of caution
@@ -744,24 +746,28 @@ class Plugin(indigo.PluginBase):
 			reply = []
 			reply += self.serialConns[dev.id].read(3)
 			if bytearray(reply) == bytearray(self.responses["ACK"]):
-				self.logger.debug(u"Command ack received: "+binascii.hexlify(bytearray(reply)))
+				self.logger.debug(dev.name+": Command ack received: "+binascii.hexlify(bytearray(reply)))
 				return True
-		self.logger.warn(u"Command not acknowledged by device")
+		self.logger.warn(dev.name+": Command not acknowledged")
 		return False
 
 	########################################
 	def sendQuery(self, dev, query):
 		if query not in self.queries:
-			self.logger.error("Invalid query "+query)
+			self.logger.error(dev.name+": Invalid query "+query)
 			return
 			
 		if self.serialConns.get(dev.id) is not None:
+			length = str(len(self.queries[query]))
+			self.logger.debug(dev.name+": writing "+length+" bytes: "+
+						binascii.hexlify(bytearray(self.queries[query])))
 			self.serialConns[dev.id].write(bytearray(self.queries[query]))
 			if self.waitForAck(dev):
 				reply = []
 				reply += self.serialConns[dev.id].read(self.responseDataLength)
 				length = str(len(reply))
-				self.logger.debug(query+" query returned "+length+" bytes: "+binascii.hexlify(bytearray(reply)))
+				self.logger.debug(dev.name+": query \""+query+"\" returned "+length+" bytes: "+
+							binascii.hexlify(bytearray(reply)))
 				return reply
 
 		return []
@@ -772,7 +778,6 @@ class Plugin(indigo.PluginBase):
 		for i in commandArray:
 			sum += i
 		CRC = (0x100 - sum) & 0xFF
-		#self.logger.debug(u"CRC for "+binascii.hexlify(bytearray(commandArray))+" is %x" % CRC)
 		return CRC
 		
 	########################################
@@ -792,38 +797,41 @@ class Plugin(indigo.PluginBase):
 	########################################
 	def sendIntegerCommand(self, dev, command, value):
 		if command not in self.integerCommands:
-			self.logger.error("Invalid integer command "+command)
+			self.logger.error(dev.name+": Invalid integer command "+command)
 			return
 			
 		cmdPacket = list(self.integerCommands[command]["command"])
 		if self.checkSerial(dev):
 			cmdPacket.append(value)
 			cmdPacket.append(self.calculateChecksum(cmdPacket))
+			self.logger.info(dev.name+": Sending %s = %s " % (command, str(value)))
+			self.logger.debug(dev.name+": writing "+str(len(cmdPacket))+" bytes: "+binascii.hexlify(bytearray(cmdPacket)))
 			self.serialConns[dev.id].write(bytearray(cmdPacket))
 			if self.waitForAck(dev):
-				self.logger.info(u"Sent %s = %s " % (command, str(value)))
 				return True
 			else:
-				self.logger.error(u"Command "+command+" not acknowledged")
+				self.logger.error(dev.name+": Command "+command+" not acknowledged")
 				return False
 				
 	########################################
 	def sendEnumCommand(self, dev, command):
 		if command not in self.enumCommands:
-			self.logger.error("Invalid enum command "+command)
+			self.logger.error(dev.name+": Invalid enum command "+command)
 			return
 			
 		if self.checkSerial(dev):
+			self.logger.info(dev.name+": Sending "+command)
+			self.logger.debug(dev.name+": writing "+str(len(self.enumCommands[command]["command"]))+
+						" bytes: "+binascii.hexlify(bytearray(self.enumCommands[command]["command"])))
 			self.serialConns[dev.id].write(bytearray(self.enumCommands[command]["command"]))
 			if self.waitForAck(dev):
-				self.logger.info(u"Sent "+command)
 				#Do we need a delay here ?
 				if (command.startswith("3D")):
 					self.update3dMode(dev);
 
 				return True
 			else:
-				self.logger.error(u"Command "+command+" not acknowledged")
+				self.logger.error(dev.name+": Command "+command+" not acknowledged")
 				return False
 
 
@@ -839,29 +847,30 @@ class Plugin(indigo.PluginBase):
 		reply = self.sendQuery(dev, "POWER")
 		self.serialConns[dev.id].timeout = self.defaultSerialTimeout
 		if bytearray(reply) == bytearray(self.responses["POWER"]):
-			self.logger.info(u"Device acknowledges power ON")
+			self.logger.info(dev.name+": Acknowledges power ON")
 			return True
 		elif len(reply) > 0:
-			self.logger.info(u"Device sent unexpected response, but it must be on")
+			self.logger.info(dev.name+": unexpected response, but it must be on")
 			return True;
 		else:
-			self.logger.debug(u"Power query not acknowleged. device must be off.")
-			return False	
+			self.logger.debug(dev.name+": Power query not acknowleged; device must be off.")
+			return False
 
 	########################################
 	def updateInput(self, dev):
 		reply = self.sendQuery(dev, "INPUT")
 		for input in self.inputs:
 			if bytearray(reply[-8:]) == bytearray(self.inputs[input]["response"]):
-				self.logger.info(u"Active input is "+input)
+				self.logger.info(dev.name+": Active input is "+input)
 				dev.updateStateOnServer("input", input)
 				return
 		
 		if self.validateChecksum(reply):
-			self.logger.warn(u"Input query returned unrecognized response "+binascii.hexlify(bytearray(reply)))
-			self.logger.warn(u"Please let the author know which input this is!")
+			self.logger.warn(u"Input query of \""+dev.name+"\" returned unrecognized response "+binascii.hexlify(bytearray(reply)))
+			self.logger.warn(u"Please let the author know what input this is!")
+			self.logger.warn(u"Send details to jon@oldefortran.com")
 		else:
-			self.logger.error(u"Input query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Input query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 			dev.updateStateOnServer("input", "UNKNOWN")		
 
@@ -871,19 +880,19 @@ class Plugin(indigo.PluginBase):
 		for mode in self.pictureModes:
 			if bytearray(reply[-8:]) == bytearray(self.pictureModes[mode]["response"]):
 				if mode.startswith("MODE"):
-					self.logger.warn(u"Current Picture Mode is "+mode)
+					self.logger.warn(u"Current Picture Mode on \""+dev.name+"\" is "+mode)
 					self.logger.warn(u"Please let the author know what your TV calls this mode!")
 					self.logger.warn(u"Send details to jon@oldefortran.com")
 				else:
-					self.logger.info(u"Current Picture Mode is "+mode)
+					self.logger.info(dev.name+": Current Picture Mode is "+mode)
 				dev.updateStateOnServer("pictureMode", mode)
 				return
 		
 		if self.validateChecksum(reply):
 			#unknown mode
-			self.logger.warn(u"Picture Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
+			self.logger.warn(dev.name+": Picture Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Picture Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Picture Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("pictureMode", "UNKNOWN")
 
@@ -893,19 +902,19 @@ class Plugin(indigo.PluginBase):
 		for mode in self.soundModes:
 			if bytearray(reply[-8:]) == bytearray(self.soundModes[mode]["response"]):
 				if mode.startswith("MODE"):
-					self.logger.warn(u"Current Sound Mode is "+mode)
+					self.logger.warn(u"Current Sound Mode on \""+dev.name+"\" is "+mode)
 					self.logger.warn(u"Please let the author know what your TV calls this mode!")
 					self.logger.warn(u"Send details to jon@oldefortran.com")
 				else:
-					self.logger.info(u"Current Sound Mode is "+mode)
+					self.logger.info(dev.name+": Current Sound Mode is "+mode)
 				dev.updateStateOnServer("soundMode", mode)
 				return
 		
 		if self.validateChecksum(reply):
 			#unknown mode
-			self.logger.warn(u"Sound Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
+			self.logger.warn(dev.name+": Sound Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Sound Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Sound Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("soundMode", "UNKNOWN")
 
@@ -914,16 +923,16 @@ class Plugin(indigo.PluginBase):
 		reply = self.sendQuery(dev, "PICTURE_SIZE")
 		for mode in self.pictureSizes:
 			if bytearray(reply[-8:]) == bytearray(self.pictureSizes[mode]["response"]):
-				self.logger.info(u"Current Picture Mode is "+mode)
+				self.logger.info(dev.name+": Current Picture Size is "+mode)
 				#Should we add placeholders for unknown sizes?
 				dev.updateStateOnServer("pictureSize", mode)
 				return
 		
 		if self.validateChecksum(reply):
 			#unknown mode
-			self.logger.warn(u"Picture Size returned unknown response "+binascii.hexlify(bytearray(reply)))
+			self.logger.warn(dev.name+": Picture Size returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"Picture Size query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Picture Size query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 		dev.updateStateOnServer("pictureSize", "UNKNOWN")
 
@@ -933,19 +942,19 @@ class Plugin(indigo.PluginBase):
 		for mode in self.ThreeDmodes:
 			if bytearray(reply[-8:]) == bytearray(self.ThreeDmodes[mode]["response"]):
 				if mode.startswith("MODE"):
-					self.logger.warn(u"Current 3D Mode is "+mode)
+					self.logger.warn(u"Current 3D Mode on \""+dev.name+"\" is "+mode)
 					self.logger.warn(u"Please let the author know what your TV calls this mode!")
 					self.logger.warn(u"Send details to jon@oldefortran.com")
 				else:
-					self.logger.info(u"Current 3D Mode is "+mode)
+					self.logger.info(dev.name+": Current 3D Mode on is "+mode)
 				dev.updateStateOnServer("Mode3D", mode)
 				return
 
 		if self.validateChecksum(reply):
 			#unknown mode
-			self.logger.warn(u"3D Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
+			self.logger.warn(dev.name+": 3D Mode returned unknown response "+binascii.hexlify(bytearray(reply)))
 		else:
-			self.logger.error(u"3D Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": 3D Mode query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateChannel(self, dev):
@@ -953,11 +962,11 @@ class Plugin(indigo.PluginBase):
 		if self.validateChecksum(reply):
 			#value is in byte 9
 			val = str(ord(reply[9]))
-			self.logger.info(u"Current Channel is "+val)
+			self.logger.info(dev.name+": Current Channel on is "+val)
 			#value is an integer state
 			dev.updateStateOnServer("channel", val)
 		else:
-			self.logger.error(u"Channel query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Channel query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateVolume(self, dev):
@@ -965,11 +974,11 @@ class Plugin(indigo.PluginBase):
 		if self.validateChecksum(reply):
 			#value is in byte 9
 			val = str(ord(reply[9]))
-			self.logger.info(u"Current Volume is "+val)
+			self.logger.info(dev.name+": Current Volume is "+val)
 			#value is an integer state
 			dev.updateStateOnServer("volume", val)
 		else:
-			self.logger.error(u"Volume query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Volume query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	def updateMute(self, dev):
@@ -977,11 +986,11 @@ class Plugin(indigo.PluginBase):
 		if self.validateChecksum(reply):
 			#value is in byte 9
 			val = (ord(reply[9]) == 1)
-			self.logger.info(u"Current Mute is "+str(val))
+			self.logger.info(dev.name+": Current Mute is "+str(val))
 			#mute is a boolean state
 			dev.updateStateOnServer("mute", val)
 		else:
-			self.logger.error(u"Mute query response bad CRC: "+binascii.hexlify(bytearray(reply)))
+			self.logger.error(dev.name+": Mute query response bad CRC: "+binascii.hexlify(bytearray(reply)))
 
 	########################################
 	# Device commands : two-way synchronized
@@ -1017,12 +1026,12 @@ class Plugin(indigo.PluginBase):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
 			try:
-				self.logger.debug(u"selecting input "+input)
+				self.logger.debug(dev.name+": selecting input "+input)
 				self.serialConns[dev.id].write(bytearray(self.inputs[input]["command"]))
 				self.waitForAck(dev)
 				self.updateInput(dev)
 			except:
-				self.logger.error("Internal error changing input")
+				self.logger.error("Plugin internal error changing input")
 				pass
 		self.serialLocks[dev.id].release()
 
@@ -1037,12 +1046,12 @@ class Plugin(indigo.PluginBase):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
 			try:
-				self.logger.debug(u"selecting picture mode "+mode)
+				self.logger.debug(dev.name+": selecting picture mode "+mode)
 				self.serialConns[dev.id].write(bytearray(self.pictureModes[mode]["command"]))
 				self.waitForAck(dev)
 				self.updatePictureMode(dev)
 			except:
-				self.logger.error("Internal error updating picture mode")
+				self.logger.error("Plugin internal error updating picture mode")
 				pass
 
 		self.serialLocks[dev.id].release()
@@ -1058,12 +1067,12 @@ class Plugin(indigo.PluginBase):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
 			try:
-				self.logger.debug(u"selecting picture size "+size)
+				self.logger.debug(dev.name+": selecting picture size "+size)
 				self.serialConns[dev.id].write(bytearray(self.pictureSizes[size]["command"]))
 				self.waitForAck(dev)
 				self.updatePictureSize(dev)
 			except:
-				self.logger.error("Internal error changing picture size")
+				self.logger.error("Plugin internal error changing picture size")
 				pass
 
 		self.serialLocks[dev.id].release()
@@ -1079,12 +1088,12 @@ class Plugin(indigo.PluginBase):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
 			try:
-				self.logger.debug(u"selecting sound mode "+mode)
+				self.logger.debug(dev.name+": selecting sound mode "+mode)
 				self.serialConns[dev.id].write(bytearray(self.soundModes[mode]["command"]))
 				self.waitForAck(dev)
 				self.updateSoundMode(dev)
 			except:
-				self.logger.error("Internal error changing sound mode")
+				self.logger.error("Plugin internal error changing sound mode")
 				pass
 
 		self.serialLocks[dev.id].release()
@@ -1105,7 +1114,7 @@ class Plugin(indigo.PluginBase):
 				self.sendIntegerCommand(dev, "Channel", channel)
 				self.updateChannel(dev)
 			except:
-				self.logger.error("Internal error changing channel")
+				self.logger.error("Plugin internal error changing channel")
 				pass				
 		self.serialLocks[dev.id].release()
 
@@ -1125,7 +1134,7 @@ class Plugin(indigo.PluginBase):
 				self.sendIntegerCommand(dev, "Volume", volume)
 				self.updateVolume(dev)
 			except:
-				self.logger.error("Internal error changing volume")
+				self.logger.error("Plugin internal error changing volume")
 				pass				
 		self.serialLocks[dev.id].release()
 
@@ -1195,7 +1204,7 @@ class Plugin(indigo.PluginBase):
 		self.serialLocks[dev.id].acquire()
 		if self.checkSerial(dev):
 			try:
-				self.logger.debug(u"sending button "+button)
+				self.logger.debug(dev.name+": sending button "+button)
 				self.serialConns[dev.id].write(bytearray(buttons[button]))
 				if self.waitForAck(dev):
 					#status queries - volume, mute, channel, picture mode, sound mode, input
@@ -1215,9 +1224,9 @@ class Plugin(indigo.PluginBase):
 					elif button == "SNDMODE":
 						self.updateSoundMode(dev)
 				else:
-					self.logger.error(u"Button "+button+" not acknowledged")
+					self.logger.error(dev.name+": Button "+button+" not acknowledged")
 			except:
-				self.logger.error("Internal error sending "+button)
+				self.logger.error("Plugin internal error sending "+button)
 				pass					
 		self.serialLocks[dev.id].release()
 
@@ -1232,7 +1241,7 @@ class Plugin(indigo.PluginBase):
 				self.sendIntegerCommand(dev, command, value)
 				self.serialLocks[dev.id].release()
 			except:
-				self.logger.error("Internal error processing command "+command)
+				self.logger.error("Plugin internal error processing command "+command)
 				pass
 
 	########################################
@@ -1254,8 +1263,8 @@ class Plugin(indigo.PluginBase):
 		
 	########################################
 	def compoundAction(self, action):
+		self.logger.debug("compoundAction enter")
 		dev = indigo.devices[action.deviceId]
-		self.logger.debug(action)
 		group = action.props.get("CommandGroup", "")
 		if (action.props.get("Command", "") != ""):
  			self.serialLocks[dev.id].acquire()
@@ -1263,7 +1272,7 @@ class Plugin(indigo.PluginBase):
 			try:
 				self.sendEnumCommand(dev, action.props["Command"])
  			except:
- 				self.logger.error("Internal error processing command "+action.props["Command"])
+ 				self.logger.error("Plugin internal error processing command "+action.props["Command"])
  				pass
  			self.serialLocks[dev.id].release()
 			return
@@ -1278,7 +1287,7 @@ class Plugin(indigo.PluginBase):
 						value = int(action.props[element])
 						self.sendIntegerCommand(dev, element, value)
 					except:
-						self.logger.error("Internal error processing command "+element)
+						self.logger.error("Plugin internal error processing command "+element)
 						pass
 				self.serialLocks[dev.id].release()
 		
@@ -1290,7 +1299,7 @@ class Plugin(indigo.PluginBase):
 					value = int(action.props[cmd])
 					self.sendIntegerCommand(dev, cmd, value)
 				except:
-					self.logger.error("Internal error processing command "+cmd)
+					self.logger.error("Plugin internal error processing command "+cmd)
 					pass
 				self.serialLocks[dev.id].release()
 
@@ -1301,7 +1310,7 @@ class Plugin(indigo.PluginBase):
 				try:
 					self.sendEnumCommand(dev, cmd)
 				except:
-					self.logger.error("Internal error processing command "+cmd)
+					self.logger.error("Plugin internal error processing command "+cmd)
 					pass
 				self.serialLocks[dev.id].release()
 
@@ -1314,15 +1323,13 @@ class Plugin(indigo.PluginBase):
 
 	########################################
 	def commandGenerator(self, filter="", valuesDict=None, typeId="", devId=None):
-		self.debugLog("dynamicMenuGenerator called")
-		self.logger.debug(valuesDict)
 		group = valuesDict.get("CommandGroup", "")
 		returnList = []
 
 		if group == "":
 			return returnList
 
-		self.logger.debug("Looking up values for "+group)
+		self.logger.debug(u"dynamicMenuGenerator() looking up values for "+group)
 		for command in self.enumCommands:
 			if command.startswith(group):
 				returnList.extend([(command, self.enumCommands[command]["name"])])
