@@ -291,10 +291,10 @@ class Plugin(indigo.PluginBase):
 				 "response" : [0x04, 0x00, 0x00, 0xf1, 0x59, 0x00, 0x00, 0xb6]
 			},
 		"NETFLIX" : { "command" : [0x08, 0x22, 0x0d, 0x00, 0x00, 0xF3, 0xD6]
-					  "response" : [] #netflix sends the generic smarthub response
+					  #netflix sends the generic smarthub response
 			},
-		"AMAZON" : { "command" : [0x08, 0x22, 0x0d, 0x00, 0x00, 0xF4, 0xD5],
-					 "response" :  [] #amazon sends the generic smarthub response
+		"AMAZON" : { "command" : [0x08, 0x22, 0x0d, 0x00, 0x00, 0xF4, 0xD5]
+					 #amazon sends the generic smarthub response
 			}
 		#I'm not sure why Netflix and Amazon are so special, but my TV doesn't have
 		#direct access to any other smarthub apps.  Perhaps newer TVs do.
@@ -866,7 +866,7 @@ class Plugin(indigo.PluginBase):
 	def updateInput(self, dev):
 		reply = self.sendQuery(dev, "INPUT")
 		for input in self.inputs:
-			if bytearray(reply[-8:]) == bytearray(self.inputs[input]["response"]):
+			if self.inputs[input].get("response") is not None and bytearray(reply[-8:]) == bytearray(self.inputs[input]["response"]):
 				self.logger.info(dev.name+": Active input is "+input)
 				dev.updateStateOnServer("input", input)
 				return
