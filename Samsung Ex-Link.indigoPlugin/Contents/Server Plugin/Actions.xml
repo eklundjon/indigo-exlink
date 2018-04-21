@@ -6,7 +6,7 @@
 		<CallbackMethod>selectInput</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Select-Input</SupportURL>
-			<Field id="Input" type="menu" defaultValue="TV">
+			<Field id="Input" type="menu" defaultValue="?">
 				<Label>Select an input:</Label>
 				<List>
 				<!-- TO-DO make this a dynamic menu based on device capabilites -->
@@ -133,6 +133,7 @@
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Picture-Command</SupportURL>
+            <!-- defaultValue="?" messes with VisibleBindingValues; working around with NULL for now -->
 			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>Picture Command:</Label>
 				<List>
@@ -165,7 +166,7 @@
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
-			<Field id="Command" type="menu" defaultValue="" visibleBindingId="CommandGroup"
+			<Field id="Command" type="menu" defaultValue="?" visibleBindingId="CommandGroup"
 					visibleBindingValue="BlackTone, DynamicCtst, RGBOnlyMode, ClrSpace, EdgeEnhancement,
 					xvYCC, MotionLighting, LEDMotionPlus, ClrTone, DigitalNoiseFilter, MPEGNoiseFilter,
 					HDMIBlackLevel, FilmMode, AutoMotionPlus">
@@ -243,6 +244,7 @@
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Sound-Command</SupportURL>
+            <!-- defaultValue="?" messes with VisibleBindingValues; working around with NULL for now -->
 			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>Sound Command:</Label>
 				<List>
@@ -253,13 +255,13 @@
 					<Option value="SpeakerSelect">Select Speakers </Option>
 					<Option value="SoundBalance">Set Balance</Option>
 					<Option value="SoundEQ">Set Graphic Equalizer</Option>
-					<Option value="ResetEqualizer">Reset/Clear Graphic Equalizer </Option>
-					<Option value="ResetSound">Reset Sound </Option>
+					<Option value="ResetEqualizer">Reset/Clear Graphic Equalizer</Option>
+					<Option value="ResetSound">Reset Sound</Option>
 					<Option value="NULL"></Option>
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
-			<Field id="Command" type="menu" defaultValue="" visibleBindingId="CommandGroup"
+			<Field id="Command" type="menu" defaultValue="?" visibleBindingId="CommandGroup"
 					visibleBindingValue="SRSTruSurround, SRSTruDialog, MTS, AutoVolume, SpeakerSelect">
 				<Label>Option Value:</Label>
 				<List class="self" filter="test" method="commandGenerator" dynamicReload="true"/>
@@ -303,6 +305,7 @@
 		<CallbackMethod>compoundAction</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-3D-Command</SupportURL>
+            <!-- defaultValue="?" messes with VisibleBindingValues; working around with NULL for now -->
 			<Field id="CommandGroup" type="menu" defaultValue="NULL">
 				<Label>3D Command:</Label>
 				<List>
@@ -316,7 +319,7 @@
 				</List>
 				<CallbackMethod>doNothingMethod</CallbackMethod>
 			</Field>
-			<Field id="Command" type="menu" defaultValue="" visibleBindingId="CommandGroup"
+			<Field id="Command" type="menu" defaultValue="?" visibleBindingId="CommandGroup"
 					visibleBindingValue="3DMode, 3D2D, 3DAutoView">
 				<Label>Option Value:</Label>
 				<List class="self" filter="test" method="commandGenerator" dynamicReload="true"/>
@@ -337,7 +340,7 @@
 		<CallbackMethod>enumAction</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Actions</SupportURL>
-			<Field id="Command" type="menu" defaultValue="TVModeCable">
+			<Field id="Command" type="menu" defaultValue="?">
 				<Label>Tuner Mode:</Label>
 				<List>
 					<Option value="TVModeCable">Cable</Option>
@@ -370,7 +373,7 @@
 		<CallbackMethod>sendSingleButton</CallbackMethod>
 		<ConfigUI>
 			<SupportURL>https://github.com/eklundjon/indigo-exlink/wiki/Action-Button-Press</SupportURL>
-			<Field id="Button" type="menu" defaultValue="MENU">
+			<Field id="Button" type="menu" defaultValue="?">
 				<Label>Select a button:</Label>
 				<List>
 					<Option value="MENU">Menu</Option>
