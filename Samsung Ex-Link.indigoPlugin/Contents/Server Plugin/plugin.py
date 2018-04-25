@@ -724,7 +724,7 @@ class Plugin(indigo.PluginBase):
 				junk += self.serialConns[dev.id].read(1)
 			if len(junk) > 0:
 				length = str(len(junk))
-				self.logger.warn(dev.name+": Received "+length+" unexpected bytes: "+binascii.hexlify(bytearray(junk)))
+				self.logger.debug(dev.name+": Received "+length+" unexpected bytes: "+binascii.hexlify(bytearray(junk)))
 			return True
 
 		#we need to figure out the serial type to find the port path
@@ -754,7 +754,11 @@ class Plugin(indigo.PluginBase):
 			if bytearray(reply) == bytearray(self.responses["ACK"]):
 				self.logger.debug(dev.name+": Command ack received: "+binascii.hexlify(bytearray(reply)))
 				return True
-		self.logger.warn(dev.name+": Command not acknowledged")
+		if self.serialConns[dev.id].timeout != self.powerSerialTimeout:
+			self.logger.warn(dev.name+": Command not acknowledged")
+		else:
+			self.logger.debug(dev.name+": Power query not acknowleged; device must be off.")
+
 		return False
 
 	########################################
@@ -859,7 +863,6 @@ class Plugin(indigo.PluginBase):
 			self.logger.info(dev.name+": unexpected response, but it must be on")
 			return True;
 		else:
-			self.logger.debug(dev.name+": Power query not acknowleged; device must be off.")
 			return False
 
 	########################################
